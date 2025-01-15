@@ -1,0 +1,41 @@
+// This block configures repositories for the entire project
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+buildscript {
+    // Define the Kotlin version
+    ext.kotlin_version = '1.8.0'
+
+    repositories {
+        google()
+        mavenCentral()
+    }
+
+    dependencies {
+        // Ensure the correct Gradle plugin version
+        classpath 'com.android.tools.build:gradle:8.1.1' // Updated to match the latest version
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.0" // Make sure the Kotlin version is compatible
+    }
+}
+
+// Custom build directory configuration for the root project
+rootProject.buildDir = "../build"
+
+// Configure subprojects to have a build directory inside the root's build directory
+subprojects {
+    project.buildDir = "${rootProject.buildDir}/${project.name}"
+}
+
+// Ensure that the app module is evaluated before any other subproject
+subprojects {
+    project.evaluationDependsOn(":app")
+}
+
+// Register a custom task to clean the project build
+tasks.register("clean", Delete) {
+    delete rootProject.buildDir
+}
